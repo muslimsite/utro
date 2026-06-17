@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// A Telegram user of the bot / Mini App.
+model User {
+  id           String   @id @default(cuid())
+  telegramId   String   @unique
+  username     String?
+  firstName    String?
+  // IANA timezone, e.g. "Europe/Moscow". Detected by the Mini App on first open.
+  timezone     String   @default("Europe/Moscow")
+  // Personal wake-up goal in "HH:MM" local time. Null until onboarding is completed.
+  goalTime     String?
+  // How many minutes after goalTime a check-in still counts as "on time".
+  graceMinutes Int      @default(45)
+  notifyGroup  Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  checkIns     CheckIn[]
+  memberships  GroupMember[]
+  ownedGroups  Group[]       @relation("GroupOwner")
+  reminderLogs ReminderLog[]
+}
+
+// A small accountability group ("друзья/семья") sharing one streak.
+model Group {
+  id         String   @id @default(cuid())
+  name       String
+  inviteCode String   @unique
+  ownerId    String
+  owner      User     @relation("GroupOwner", fields: [ownerId], references: [id])
+  createdAt  DateTime @default(now())
+
+  members GroupMember[]
+}
+
+model GroupMember {
+  id       String   @id @default(cuid())
+  groupId  String
+  userId   String
+  joinedAt DateTime @default(now())
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+}
+
+// One check-in per user per local calendar day.
+model CheckIn {
+  id        String   @id @default(cuid())
+  userId    String
+  date      String // "YYYY-MM-DD" in the user's local timezone at the moment of check-in
+  checkedAt DateTime @default(now())
+  onTime    Boolean
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+}
+
+// Tracks which reminders were already sent so the scheduler stays idempotent.
+model ReminderLog {
+  id     String   @id @default(cuid())
+  userId String
+  date   String // "YYYY-MM-DD" local day this reminder belongs to
+  type   String // "morning" | "lastcall"
+  sentAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date, type])
+}

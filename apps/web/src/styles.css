@@ -1,0 +1,234 @@
+:root {
+  --tg-bg: #ffffff;
+  --tg-text: #111111;
+  --tg-hint: #8e8e93;
+  --tg-button: #2481cc;
+  --tg-button-text: #ffffff;
+  --tg-secondary-bg: #f0f0f3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--tg-bg);
+  color: var(--tg-text);
+}
+
+button {
+  font-family: inherit;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page {
+  flex: 1;
+  padding: 16px 16px 88px;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+h1 {
+  font-size: 22px;
+  margin: 4px 0 16px;
+}
+
+h2 {
+  font-size: 17px;
+  margin: 0 0 12px;
+}
+
+p.hint {
+  color: var(--tg-hint);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.card {
+  background: var(--tg-secondary-bg);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.streak-hero {
+  text-align: center;
+  padding: 28px 16px;
+}
+
+.streak-number {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.streak-label {
+  color: var(--tg-hint);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--tg-button);
+  color: var(--tg-button-text);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.btn-secondary {
+  background: var(--tg-bg);
+  color: var(--tg-text);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.btn-danger {
+  background: #ff3b30;
+  color: #fff;
+}
+
+.btn + .btn,
+.input + .btn {
+  margin-top: 10px;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field label {
+  display: block;
+  font-size: 14px;
+  color: var(--tg-hint);
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--tg-hint);
+  background: var(--tg-bg);
+  color: var(--tg-text);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 16px;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.member-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.member-row:last-child {
+  border-bottom: none;
+}
+
+.member-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.owner-tag {
+  font-size: 11px;
+  color: var(--tg-hint);
+}
+
+.status-mark {
+  font-size: 18px;
+}
+
+.invite-code {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-align: center;
+  padding: 12px;
+  background: var(--tg-bg);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  user-select: all;
+}
+
+.error-text {
+  color: #ff3b30;
+  font-size: 14px;
+  margin: -4px 0 14px;
+}
+
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: var(--tg-secondary-bg);
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab {
+  flex: 1;
+  border: none;
+  background: none;
+  padding: 12px 0 10px;
+  font-size: 12px;
+  color: var(--tg-hint);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.tab-icon {
+  font-size: 20px;
+}
+
+.tab.active {
+  color: var(--tg-button);
+}
+
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
