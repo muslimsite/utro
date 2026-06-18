@@ -127,6 +127,7 @@ function GroupView({ group, onChange }: { group: GroupType; onChange: () => void
       <div className="card streak-hero">
         <div className="streak-number">{group.streak}</div>
         <div className="streak-label">{group.streak === 1 ? "день подряд вместе" : "дней подряд вместе"}</div>
+        <div className="streak-divider" />
       </div>
 
       <div className="card">

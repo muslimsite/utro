@@ -1,19 +1,9 @@
-interface TelegramThemeParams {
-  bg_color?: string;
-  text_color?: string;
-  hint_color?: string;
-  link_color?: string;
-  button_color?: string;
-  button_text_color?: string;
-  secondary_bg_color?: string;
-}
-
 interface TelegramWebApp {
   initData: string;
   colorScheme: "light" | "dark";
-  themeParams: TelegramThemeParams;
   ready(): void;
   expand(): void;
+  openLink?(url: string, options?: { try_instant_view?: boolean }): void;
   HapticFeedback?: {
     impactOccurred(style: "light" | "medium" | "heavy" | "rigid" | "soft"): void;
     notificationOccurred(type: "error" | "success" | "warning"): void;
@@ -30,23 +20,23 @@ const DEV_TELEGRAM_ID = "1";
 
 export const webApp = window.Telegram?.WebApp;
 
+// The app uses a fixed brand palette (see styles.css) rather than Telegram's live
+// theme colors, so onboarding/marketing visuals stay consistent across light/dark clients.
 export function initTelegram(): void {
-  if (!webApp) return;
-  webApp.ready();
-  webApp.expand();
-
-  const theme = webApp.themeParams;
-  const root = document.documentElement.style;
-  if (theme.bg_color) root.setProperty("--tg-bg", theme.bg_color);
-  if (theme.text_color) root.setProperty("--tg-text", theme.text_color);
-  if (theme.hint_color) root.setProperty("--tg-hint", theme.hint_color);
-  if (theme.button_color) root.setProperty("--tg-button", theme.button_color);
-  if (theme.button_text_color) root.setProperty("--tg-button-text", theme.button_text_color);
-  if (theme.secondary_bg_color) root.setProperty("--tg-secondary-bg", theme.secondary_bg_color);
+  webApp?.ready();
+  webApp?.expand();
 }
 
 export function haptic(style: "light" | "medium" | "heavy" | "rigid" | "soft" = "medium"): void {
   webApp?.HapticFeedback?.impactOccurred(style);
+}
+
+export function openExternalLink(url: string): void {
+  if (webApp?.openLink) {
+    webApp.openLink(url);
+    return;
+  }
+  window.open(url, "_blank", "noopener,noreferrer");
 }
 
 // Outside Telegram (plain browser dev), there's no signed initData. The server only

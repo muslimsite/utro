@@ -27,7 +27,10 @@ export default function Onboarding({ onDone }: Props) {
 
   return (
     <div className="page">
-      <h1>🌅 Утро</h1>
+      <div className="title-row">
+        <span className="brand-mark">🌙</span>
+        <h1>Утро</h1>
+      </div>
       <p className="hint">
         Социальный челлендж раннего подъёма. Поставь личную цель — время, в которое хочешь вставать, — и отмечайся
         каждый день, чтобы не потерять стрик.

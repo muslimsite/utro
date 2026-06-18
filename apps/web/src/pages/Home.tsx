@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api, ApiError } from "../api.ts";
 import { haptic } from "../telegram.ts";
 import type { Me } from "../types.ts";
+import CoursePromo from "../components/CoursePromo.tsx";
 
 interface Props {
   me: Me;
@@ -54,6 +55,7 @@ export default function Home({ me, onCheckedIn }: Props) {
       <div className="card streak-hero">
         <div className="streak-number">{me.streak}</div>
         <div className="streak-label">{me.streak === 1 ? "день подряд" : "дней подряд"}</div>
+        <div className="streak-divider" />
       </div>
 
       <div className="card">
@@ -73,6 +75,8 @@ export default function Home({ me, onCheckedIn }: Props) {
           </>
         )}
       </div>
+
+      <CoursePromo />
     </div>
   );
 }
