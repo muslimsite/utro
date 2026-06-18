@@ -1,6 +1,6 @@
 import { openExternalLink } from "../telegram.ts";
 
-const COURSE_URL = import.meta.env.VITE_COURSE_URL ?? "#";
+const COURSE_URL = import.meta.env.VITE_COURSE_URL ?? "https://fajr-sestram.ru";
 
 export default function CoursePromo() {
   return (
