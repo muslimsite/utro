@@ -58,6 +58,15 @@ export function offsetDateString(date: string, dayDelta: number): string {
   return dt.toISOString().slice(0, 10);
 }
 
+// Whole-day difference between two "YYYY-MM-DD" strings (timezone-agnostic), `to` minus `from`.
+export function daysBetweenDateStrings(from: string, to: string): number {
+  const [fy, fm, fd] = from.split("-").map(Number);
+  const [ty, tm, td] = to.split("-").map(Number);
+  const fromUtc = Date.UTC(fy, fm - 1, fd);
+  const toUtc = Date.UTC(ty, tm - 1, td);
+  return Math.round((toUtc - fromUtc) / 86_400_000);
+}
+
 export function isOnTime(localTime: string, goalTime: string, graceMinutes: number): boolean {
   const deadline = addMinutes(goalTime, graceMinutes);
   return hhmmToMinutes(localTime) <= hhmmToMinutes(deadline);

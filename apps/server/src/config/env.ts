@@ -7,6 +7,7 @@ const schema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   CORS_ORIGIN: z.string().default("*"),
   WEB_APP_URL: z.string().optional(),
+  COURSE_URL: z.string().default("https://fajr-sestram.ru"),
   ALLOW_DEV_AUTH: z
     .string()
     .optional()

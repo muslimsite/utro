@@ -23,10 +23,11 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  checkIns     CheckIn[]
-  memberships  GroupMember[]
-  ownedGroups  Group[]       @relation("GroupOwner")
-  reminderLogs ReminderLog[]
+  checkIns       CheckIn[]
+  memberships    GroupMember[]
+  ownedGroups    Group[]         @relation("GroupOwner")
+  reminderLogs   ReminderLog[]
+  courseDripLogs CourseDripLog[]
 }
 
 // A small accountability group ("друзья/семья") sharing one streak.
@@ -77,4 +78,17 @@ model ReminderLog {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, date, type])
+}
+
+// Tracks which steps of the course warm-up message sequence were already sent
+// to a user, so the scheduler stays idempotent across restarts/overlapping ticks.
+model CourseDripLog {
+  id     String   @id @default(cuid())
+  userId String
+  step   Int // index into the warm-up sequence (see scheduler/courseDrip.ts)
+  sentAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, step])
 }
