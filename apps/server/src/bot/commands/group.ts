@@ -113,9 +113,4 @@ export function registerGroupCommands(bot: Bot): void {
       throw err;
     }
   });
-
-  bot.callbackQuery("show_group", async (ctx) => {
-    await ctx.answerCallbackQuery();
-    await replyGroupInfo(ctx);
-  });
 }

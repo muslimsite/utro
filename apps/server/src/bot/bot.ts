@@ -23,18 +23,9 @@ bot.catch((err) => {
 });
 
 export async function configureBotMenu(): Promise<void> {
-  await bot.api.setMyCommands([
-    { command: "checkin", description: "Отметиться, что встал" },
-    { command: "streak", description: "Мой стрик и стрик группы" },
-    { command: "goal", description: "Поставить цель подъёма" },
-    { command: "timezone", description: "Указать часовой пояс" },
-    { command: "mygroup", description: "Моя группа" },
-    { command: "creategroup", description: "Создать группу" },
-    { command: "join", description: "Вступить в группу" },
-    { command: "leavegroup", description: "Выйти из группы" },
-    { command: "course", description: "Курс «Вставай на фаджр»" },
-    { command: "help", description: "Список команд" },
-  ]);
+  // No visible command list: everything happens in the Mini App, the bot only
+  // greets (/start) and sends proactive warm-up/course messages.
+  await bot.api.setMyCommands([]);
 
   if (env.WEB_APP_URL) {
     await bot.api.setChatMenuButton({

@@ -4,14 +4,8 @@ import { env } from "../../config/env.ts";
 
 const WELCOME_TEXT =
   "Ассаламу алейкум! 🌅\n\n" +
-  "«Утро» — вызов раннего подъёма вместе с друзьями.\n" +
-  "Поставь личную цель — во сколько хочешь вставать — и отмечайся каждый день.\n\n" +
-  "Команды:\n" +
-  "/goal ЧЧ:ММ — поставить или изменить цель\n" +
-  "/creategroup Название — создать группу\n" +
-  "/join КОД — вступить в группу по коду\n" +
-  "/streak — твой стрик и стрик группы\n" +
-  "/help — все команды";
+  "«Утро» — вызов раннего подъёма вместе с друзьями.\n\n" +
+  "Открывай приложение кнопкой ниже: там ставишь цель подъёма, отмечаешься каждый день и сразу видишь свой стрик и стрик группы.";
 
 export function registerStart(bot: Bot): void {
   bot.command("start", async (ctx) => {
@@ -23,12 +17,10 @@ export function registerStart(bot: Bot): void {
       firstName: ctx.from.first_name,
     });
 
-    const keyboard = new InlineKeyboard();
-    if (env.WEB_APP_URL) {
-      keyboard.webApp("📱 Открыть Утро", env.WEB_APP_URL).row();
-    }
-    keyboard.text("👥 Моя группа", "show_group");
+    const reply_markup = env.WEB_APP_URL
+      ? new InlineKeyboard().webApp("📱 Открыть Утро", env.WEB_APP_URL)
+      : undefined;
 
-    await ctx.reply(WELCOME_TEXT, { reply_markup: keyboard });
+    await ctx.reply(WELCOME_TEXT, reply_markup ? { reply_markup } : undefined);
   });
 }
