@@ -6,6 +6,7 @@ import { registerGroupCommands } from "./commands/group.ts";
 import { registerStreakCommand } from "./commands/streak.ts";
 import { registerCheckinHandlers } from "./commands/checkin.ts";
 import { registerHelpCommand } from "./commands/help.ts";
+import { registerCourseCommand } from "./commands/course.ts";
 
 export const bot = new Bot(env.BOT_TOKEN);
 
@@ -15,6 +16,7 @@ registerGroupCommands(bot);
 registerStreakCommand(bot);
 registerCheckinHandlers(bot);
 registerHelpCommand(bot);
+registerCourseCommand(bot);
 
 bot.catch((err) => {
   console.error(`Bot error while handling update ${err.ctx.update.update_id}:`, err.error);
@@ -30,6 +32,7 @@ export async function configureBotMenu(): Promise<void> {
     { command: "creategroup", description: "Создать группу" },
     { command: "join", description: "Вступить в группу" },
     { command: "leavegroup", description: "Выйти из группы" },
+    { command: "course", description: "Курс «Вставай на фаджр»" },
     { command: "help", description: "Список команд" },
   ]);
 

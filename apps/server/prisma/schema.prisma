@@ -9,25 +9,28 @@ datasource db {
 
 // A Telegram user of the bot / Mini App.
 model User {
-  id           String   @id @default(cuid())
-  telegramId   String   @unique
-  username     String?
-  firstName    String?
+  id              String    @id @default(cuid())
+  telegramId      String    @unique
+  username        String?
+  firstName       String?
   // IANA timezone, e.g. "Europe/Moscow". Detected by the Mini App on first open.
-  timezone     String   @default("Europe/Moscow")
+  timezone        String    @default("Europe/Moscow")
   // Personal wake-up goal in "HH:MM" local time. Null until onboarding is completed.
-  goalTime     String?
+  goalTime        String?
   // How many minutes after goalTime a check-in still counts as "on time".
-  graceMinutes Int      @default(45)
-  notifyGroup  Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  graceMinutes    Int       @default(45)
+  notifyGroup     Boolean   @default(true)
+  // Set once the 7-day on-time streak reward (course discount code) has been sent.
+  promoUnlockedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
-  checkIns       CheckIn[]
-  memberships    GroupMember[]
-  ownedGroups    Group[]         @relation("GroupOwner")
-  reminderLogs   ReminderLog[]
-  courseDripLogs CourseDripLog[]
+  checkIns           CheckIn[]
+  memberships        GroupMember[]
+  ownedGroups        Group[]             @relation("GroupOwner")
+  reminderLogs       ReminderLog[]
+  courseDripLogs     CourseDripLog[]
+  courseApplications CourseApplication[]
 }
 
 // A small accountability group ("друзья/семья") sharing one streak.
@@ -91,4 +94,19 @@ model CourseDripLog {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, step])
+}
+
+// A lead for a paid tariff that requires a cohort to fill before it starts
+// (see services/courseApplicationService.ts for the thresholds).
+model CourseApplication {
+  id            String    @id @default(cuid())
+  userId        String
+  tariff        String // "ideal_morning" | "personal_birds"
+  createdAt     DateTime  @default(now())
+  // Set on every application in a batch once that batch reaches its threshold.
+  groupFilledAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tariff])
 }

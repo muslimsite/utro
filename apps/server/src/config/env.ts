@@ -8,6 +8,10 @@ const schema = z.object({
   CORS_ORIGIN: z.string().default("*"),
   WEB_APP_URL: z.string().optional(),
   COURSE_URL: z.string().default("https://fajr-sestram.ru"),
+  // Direct checkout link for the "Ранний подъём" tariff (instant automatic access).
+  COURSE_PAYMENT_URL: z.string().default("https://monecle.com/buy/96317"),
+  // Telegram numeric ID to notify when a cohort (Идеальное утро / Личные пташки) fills up.
+  ADMIN_TELEGRAM_ID: z.string().optional(),
   ALLOW_DEV_AUTH: z
     .string()
     .optional()

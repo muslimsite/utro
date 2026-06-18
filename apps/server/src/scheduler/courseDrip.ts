@@ -4,6 +4,7 @@ import { bot } from "../bot/bot.ts";
 import { prisma } from "../db/prisma.ts";
 import { Prisma } from "../generated/prisma/client.ts";
 import { env } from "../config/env.ts";
+import { buildTariffsKeyboard, TARIFFS_TEXT } from "../bot/courseContent.ts";
 import { localDateString, localTimeString, daysBetweenDateStrings } from "../utils/time.ts";
 
 const SEND_AT = "10:00";
@@ -12,7 +13,10 @@ interface CourseDripStep {
   // Local calendar days since the user's createdAt date.
   dayOffset: number;
   text: string;
+  // Simple URL button to the marketing landing page (env.COURSE_URL).
   button?: string;
+  // Rich keyboard with the real buy/apply actions (see bot/courseContent.ts).
+  tariffsKeyboard?: boolean;
 }
 
 // A warm-up sequence introducing the free "Утро" tracker's companion paid course
@@ -74,11 +78,10 @@ const COURSE_DRIP_STEPS: readonly CourseDripStep[] = [
     dayOffset: 11,
     text:
       "Если хочешь не просто отмечаться в трекере, а пройти весь путь под присмотром — вот тарифы курса «Вставай на фаджр»:\n\n" +
-      "🌙 «Ранний подъём» — 14 дней, 10+ уроков, доступ сразу после оплаты — 5 900 ₽\n" +
-      "🌙 «Идеальное утро» — 21 день, 15+ уроков, поддержка куратора 21 день, вебинар с Солихой, модуль от нутрициолога\n" +
-      "🌙 «Личные пташки Солихи» — закрытая мини-группа до 15 сестёр с личной обратной связью от Солихи\n\n" +
-      "Подробности и оплата — по кнопке ниже.",
-    button: "Выбрать тариф",
+      TARIFFS_TEXT +
+      "\n\n«Ранний подъём» открывается сразу после оплаты — кнопка ниже. На «Идеальное утро» и «Личные пташки» сейчас идёт " +
+      "набор группы: оставь заявку, и я напишу, как только она наберётся.",
+    tariffsKeyboard: true,
   },
   {
     dayOffset: 14,
@@ -86,8 +89,9 @@ const COURSE_DRIP_STEPS: readonly CourseDripStep[] = [
       "Трекер «Утро» остаётся с тобой бесплатно — отмечайся и дальше, я рада, что ты здесь 🤍\n\n" +
       "Но если за эти две недели ты почувствовала, что одних отметок в приложении мало — что хочется системы, разбора именно " +
       "твоей ситуации и поддержки рядом — для этого и существует курс «Вставай на фаджр». Через него уже прошло около 5000 сестёр.\n\n" +
-      "Если откликается — напиши, и расскажу, какой тариф подойдёт именно тебе.",
-    button: "Записаться на курс",
+      "Если откликается — выбери ниже: «Ранний подъём» открывается сразу после оплаты, а на «Идеальное утро» и «Личные пташки» " +
+      "можно оставить заявку.",
+    tariffsKeyboard: true,
   },
 ];
 
@@ -129,7 +133,11 @@ async function tick(): Promise<void> {
 
       const def = COURSE_DRIP_STEPS[step];
       await sendStepOnce(user.id, step, async () => {
-        const reply_markup = def.button ? new InlineKeyboard().url(def.button, env.COURSE_URL) : undefined;
+        const reply_markup = def.tariffsKeyboard
+          ? buildTariffsKeyboard()
+          : def.button
+            ? new InlineKeyboard().url(def.button, env.COURSE_URL)
+            : undefined;
         await bot.api.sendMessage(user.telegramId, def.text, reply_markup ? { reply_markup } : {});
       });
     }),
