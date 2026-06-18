@@ -1,0 +1,11 @@
+node_modules
+**/node_modules
+.git
+**/dev.db
+**/dev.db-journal
+**/dev.db-wal
+**/dev.db-shm
+.env
+**/.env
+apps/web/dist
+apps/server/src/generated
