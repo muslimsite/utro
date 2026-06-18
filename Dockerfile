@@ -16,6 +16,12 @@ COPY apps/server apps/server
 WORKDIR /app/apps/server
 RUN npx prisma generate
 
+WORKDIR /app
+COPY apps/web apps/web
+ENV VITE_API_URL=""
+RUN npm run build -w apps/web
+
+WORKDIR /app/apps/server
 ENV NODE_ENV=production
 EXPOSE 3000
 
